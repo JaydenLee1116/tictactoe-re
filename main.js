@@ -1,16 +1,17 @@
 'use strict';
 
-const data = [];
-for (let i = 0; i < 3; i++) {
-  data.push([]);
-}
+const { body } = document;
+const $table = document.createElement('table');
+const $result = document.createElement('div');
+const rows = [];
 
 let turn = 'O';
-const $table = document.createElement('table');
 for (let i = 0; i < 3; i++) {
   const $tr = document.createElement('tr');
-  for (let i = 0; i < 3; i++) {
+  const cells = [];
+  for (let j = 0; j < 3; j++) {
     const $td = document.createElement('td');
+
     $td.addEventListener('click', (event) => {
       console.log('clicked');
       if (event.target.textContent) return;
@@ -18,8 +19,11 @@ for (let i = 0; i < 3; i++) {
       event.target.textContent = turn;
       turn = turn === 'O' ? 'X' : 'O';
     });
+
+    cells.push($td);
     $tr.append($td);
   }
+  rows.push(cells);
   $table.append($tr);
 }
-document.body.append($table);
+body.append($table);
