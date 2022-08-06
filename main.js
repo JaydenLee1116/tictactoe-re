@@ -32,15 +32,7 @@ const callback = (event) => {
     return;
   }
 
-  let isDraw = true;
-
-  rows.forEach((row) => {
-    row.forEach((cell) => {
-      if (!cell.textContent) {
-        isDraw = false;
-      }
-    });
-  });
+  const isDraw = rows.flat().every((cell) => cell.textContent);
 
   if (isDraw) {
     $result.textContent = '무승부!';
