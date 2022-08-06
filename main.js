@@ -19,8 +19,6 @@ for (let i = 0; i < 3; i++) {
 }
 
 let turn = 'O';
-let rowIndex;
-let columnIndex;
 const callback = (event) => {
   if (event.target.textContent) return;
   // event.target이 곧 $td를 의미한다. 가급적 event.target을 쓰는 게 좋다!
@@ -33,12 +31,27 @@ const callback = (event) => {
     $table.removeEventListener('click', callback);
     return;
   }
+
+  let isDraw = true;
+
+  rows.forEach((row) => {
+    row.forEach((cell) => {
+      if (!cell.textContent) {
+        isDraw = false;
+      }
+    });
+  });
+
+  if (isDraw) {
+    $result.textContent = '무승부!';
+  }
   turn = turn === 'O' ? 'X' : 'O';
 };
 
 const checkWinner = (target) => {
-  // let rowIndex;
-  // let columnIndex;
+  let rowIndex;
+  let columnIndex;
+
   rows.forEach((row, ri) => {
     row.forEach((cell, ci) => {
       if (cell === target) {
