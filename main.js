@@ -26,6 +26,7 @@ const callback = (event) => {
   event.target.textContent = turn;
 
   const hasWinner = checkWinner(event.target);
+
   if (hasWinner) {
     $result.textContent = `${turn} 승리!`;
     $table.removeEventListener('click', callback);
@@ -38,6 +39,27 @@ const callback = (event) => {
     $result.textContent = '무승부!';
   }
   turn = turn === 'O' ? 'X' : 'O';
+
+  if (turn === 'X') {
+    const emptyCells = rows.flat().filter((value) => !value.textContent);
+    const randomCell =
+      emptyCells[Math.floor(Math.random() * emptyCells.length)];
+    randomCell.textContent = 'X';
+    const hasWinner = checkWinner(randomCell);
+
+    if (hasWinner) {
+      $result.textContent = `${turn} 승리!`;
+      $table.removeEventListener('click', callback);
+      return;
+    }
+
+    const isDraw = rows.flat().every((cell) => cell.textContent);
+
+    if (isDraw) {
+      $result.textContent = '무승부!';
+    }
+    turn = turn === 'O' ? 'X' : 'O';
+  }
 };
 
 const checkWinner = (target) => {
