@@ -19,13 +19,9 @@ for (let i = 0; i < 3; i++) {
 }
 
 let turn = 'O';
-const callback = (event) => {
-  if (event.target.textContent) return;
-  // event.target이 곧 $td를 의미한다. 가급적 event.target을 쓰는 게 좋다!
-  // 정확히는 event.currentTarget을 해주는 게 더 정확한 표현!
-  event.target.textContent = turn;
 
-  const hasWinner = checkWinner(event.target);
+const checkWinnerAndDraw = (target) => {
+  const hasWinner = checkWinner(target);
 
   if (hasWinner) {
     $result.textContent = `${turn} 승리!`;
@@ -34,31 +30,34 @@ const callback = (event) => {
   }
 
   const isDraw = rows.flat().every((cell) => cell.textContent);
-
   if (isDraw) {
     $result.textContent = '무승부!';
   }
   turn = turn === 'O' ? 'X' : 'O';
+};
+
+let clickable = true;
+const callback = (event) => {
+  if (!clickable) return;
+  if (event.target.textContent) return;
+  // event.target이 곧 $td를 의미한다. 가급적 event.target을 쓰는 게 좋다!
+  // 정확히는 event.currentTarget을 해주는 게 더 정확한 표현!
+  event.target.textContent = turn;
+
+  const hasWinner = checkWinner(event.target);
+
+  checkWinnerAndDraw(event.target);
 
   if (turn === 'X') {
     const emptyCells = rows.flat().filter((value) => !value.textContent);
     const randomCell =
       emptyCells[Math.floor(Math.random() * emptyCells.length)];
-    randomCell.textContent = 'X';
-    const hasWinner = checkWinner(randomCell);
-
-    if (hasWinner) {
-      $result.textContent = `${turn} 승리!`;
-      $table.removeEventListener('click', callback);
-      return;
-    }
-
-    const isDraw = rows.flat().every((cell) => cell.textContent);
-
-    if (isDraw) {
-      $result.textContent = '무승부!';
-    }
-    turn = turn === 'O' ? 'X' : 'O';
+    clickable = false;
+    setTimeout(() => {
+      randomCell.textContent = 'X';
+      checkWinnerAndDraw(randomCell);
+      clickable = true;
+    }, 1000);
   }
 };
 
